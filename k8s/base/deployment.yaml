@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21.6
+          ports:
+            - containerPort: 8080
+            - containerPort: 6379
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: conf
+          configMap:
+            items:
+              - key: nginx-stream.conf
+                path: nginx.conf
+            name: nginx-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis1
+  template:
+    metadata:
+      labels:
+        app: redis1
+    spec:
+      containers:
+        - name: redis
+          image: redis:6.2.6
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis2
+  template:
+    metadata:
+      labels:
+        app: redis2
+    spec:
+      containers:
+        - name: redis
+          image: redis:6.2.6
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 500Mi
