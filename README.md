@@ -42,3 +42,9 @@ install [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl),
     done;
     # -> run_id should be about 8:2
     ```
+
+- Clean up
+
+    ```sh
+    kind delete cluster
+    ```
